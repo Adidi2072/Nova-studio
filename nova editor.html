@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Nova Studio</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: white;
+    background:
+        radial-gradient(circle at top left, #ff9d00 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #ff5e00 0%, transparent 30%),
+        #111;
+}
+
+header {
+    padding: 25px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, #ff8c00, #ffd000);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.version {
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1400px;
+    margin: 20px auto 50px;
+}
+
+.hero {
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    color: #ccc;
+}
+
+.studio {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.panel-header {
+    padding: 15px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.panel-title {
+    font-weight: bold;
+}
+
+textarea {
+    width: 100%;
+    height: 500px;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 20px;
+    background: #161616;
+    color: #f5f5f5;
+    font-family: Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.preview {
+    min-height: 500px;
+    background: #202020;
+    padding: 25px;
+    color: white;
+}
+
+.nova-window {
+    width: 100%;
+    min-height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #202020;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.window-bar {
+    background: rgba(0,0,0,0.3);
+    padding: 10px 14px;
+    font-weight: bold;
+}
+
+.window-content {
+    padding: 20px;
+}
+
+.nova-button {
+    border: none;
+    padding: 10px 18px;
+    margin-top: 15px;
+    border-radius: 8px;
+    background: #ff9500;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nova-button:hover {
+    transform: scale(1.03);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+button.action {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.run {
+    background: #ff9500;
+    color: white;
+}
+
+.clear {
+    background: #333;
+    color: white;
+}
+
+.examples {
+    margin-top: 25px;
+}
+
+.example {
+    display: inline-block;
+    margin: 6px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+}
+
+.example:hover {
+    background: rgba(255,149,0,0.3);
+}
+
+.console {
+    margin-top: 15px;
+    padding: 15px;
+    background: #090909;
+    border-radius: 10px;
+    font-family: Consolas, monospace;
+    color: #ddd;
+    min-height: 70px;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 900px) {
+    .studio {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">NOVA</div>
+    <div class="version">Nova Studio • 0.1</div>
+</header>
+
+<div class="container">
+
+    <div class="hero">
+        <h1>Nova Studio</h1>
+        <p>Écris du Nova. Exécute-le directement dans ton navigateur.</p>
+    </div>
+
+    <div class="studio">
+
+        <!-- EDITEUR -->
+        <div class="panel">
+
+            <div class="panel-header">
+                <div class="panel-title">📄 main.nva</div>
+
+                <div class="actions">
+                    <button class="action run" onclick="runNova()">
+                        ▶ Exécuter
+                    </button>
+
+                    <button class="action clear" onclick="clearCode()">
+                        Effacer
+                    </button>
+                </div>
+            </div>
+
+            <textarea id="code">window: 800, 600
+background: "#202020"
+
+say: "Bienvenue dans Nova !"
+
+button: "Clique-moi" when "Clique-moi" cliqued
+say: "Tu as cliqué !"</textarea>
+
+        </div>
+
+        <!-- RESULTAT -->
+        <div class="panel">
+
+            <div class="panel-header">
+                <div class="panel-title">🖥️ Résultat</div>
+            </div>
+
+            <div class="preview" id="preview">
+
+                <div class="nova-window">
+
+                    <div class="window-bar" id="windowTitle">
+                        Nova
+                    </div>
+
+                    <div class="window-content" id="output">
+                        Appuie sur ▶ Exécuter
+                    </div>
+
+                </div>
+
+                <div class="console" id="console">
+                    Console Nova prête.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="examples">
+
+        <h2>Exemples</h2>
+
+        <div class="example" onclick="loadExample('hello')">
+            Hello World
+        </div>
+
+        <div class="example" onclick="loadExample('button')">
+            Bouton
+        </div>
+
+        <div class="example" onclick="loadExample('orange')">
+            Fenêtre orange
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const codeEditor = document.getElementById("code");
+const output = document.getElementById("output");
+const preview = document.getElementById("preview");
+const consoleBox = document.getElementById("console");
+const windowTitle = document.getElementById("windowTitle");
+
+function runNova() {
+
+    const code = codeEditor.value;
+    const lines = code.split("\n");
+
+    output.innerHTML = "";
+    consoleBox.textContent = "Nova exécuté.";
+
+    let buttons = [];
+
+    lines.forEach(line => {
+
+        line = line.trim();
+
+        if (!line) return;
+
+        // window
+        if (line.startsWith("window:")) {
+
+            const value = line.substring(7).trim();
+
+            const parts = value.split(",");
+
+            if (parts.length >= 2) {
+                const width = parseInt(parts[0]);
+                const height = parseInt(parts[1]);
+
+                if (!isNaN(width)) {
+                    document.querySelector(".nova-window").style.width =
+                        Math.min(width, 100) + "%";
+                }
+
+                if (!isNaN(height)) {
+                    document.querySelector(".nova-window").style.minHeight =
+                        Math.min(height, 500) + "px";
+                }
+            }
+        }
+
+        // background
+        else if (line.startsWith("background:")) {
+
+            const color = line
+                .substring(11)
+                .trim()
+                .replaceAll('"', "");
+
+            document.querySelector(".nova-window").style.background = color;
+        }
+
+        // say
+        else if (line.startsWith("say:")) {
+
+            let text = line
+                .substring(4)
+                .trim()
+                .replace(/^"|"$/g, "");
+
+            const p = document.createElement("p");
+            p.textContent = text;
+
+            output.appendChild(p);
+        }
+
+        // button
+        else if (line.startsWith("button:")) {
+
+            let text = line
+                .substring(7)
+                .trim();
+
+            const match = text.match(/^"([^"]+)"/);
+
+            if (match) {
+
+                const buttonText = match[1];
+
+                const button = document.createElement("button");
+
+                button.className = "nova-button";
+                button.textContent = buttonText;
+
+                button.onclick = function() {
+
+                    const message = "Bouton \"" +
+                        buttonText +
+                        "\" cliqué !";
+
+                    const p = document.createElement("p");
+
+                    p.textContent = message;
+
+                    output.appendChild(p);
+
+                    consoleBox.textContent = message;
+                };
+
+                output.appendChild(button);
+            }
+        }
+
+    });
+
+}
+
+function clearCode() {
+    codeEditor.value = "";
+    output.innerHTML = "";
+    consoleBox.textContent = "Console Nova prête.";
+}
+
+function loadExample(type) {
+
+    if (type === "hello") {
+
+        codeEditor.value =
+`window: 800, 600
+background: "#202020"
+
+say: "Hello World !"
+say: "Bienvenue dans Nova."`;
+
+    }
+
+    if (type === "button") {
+
+        codeEditor.value =
+`window: 800, 600
+background: "#202020"
+
+say: "Teste ce bouton :"
+
+button: "Clique-moi"`;
+
+    }
+
+    if (type === "orange") {
+
+        codeEditor.value =
+`window: 800, 600
+background: "#FFA500"
+
+say: "Bienvenue dans ma fenêtre orange !"`;
+
+    }
+
+    runNova();
+}
+
+</script>
+
+</body>
+</html>
